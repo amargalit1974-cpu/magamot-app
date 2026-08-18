@@ -8,8 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
-        .fade-in { animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .option-btn { transition: all 0.2s; }
         .option-btn.selected { background-color: #e0e7ff; border-color: #6366f1; box-shadow: 0 0 0 2px #6366f1; }
     </style>
@@ -22,9 +22,9 @@
             </div>
             <h1 class="text-2xl font-bold text-indigo-900">הכוונת מגמות</h1>
             
-            <div id="cloudStatus" class="flex items-center gap-2 mr-4 px-3 py-1 bg-green-50 border border-green-200 rounded-full text-green-700 text-sm font-medium">
+            <div id="cloudStatus" class="flex items-center gap-2 mr-4 px-3 py-1 bg-indigo-50 border border-indigo-200 rounded-full text-indigo-700 text-sm font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
-                מאגר ענן משותף פעיל
+                מערכת מקומית מאובטחת
             </div>
         </div>
         <button id="btnShowLogin" class="text-sm font-medium text-gray-500 hover:text-indigo-600 px-4 py-2 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition">
@@ -39,7 +39,7 @@
                 <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center">ברוכה הבאה לשאלון ההכוונה</h2>
                 <p class="text-gray-600 text-lg mb-8 text-center leading-relaxed">
                     שאלון אבחון מורחב זה נועד לעזור לך לבחון איזו מגמה עשויה להתאים יותר לכישורייך ולנטיותייך: <span class="font-semibold text-indigo-600">עיצוב</span> או <span class="font-semibold text-teal-600">ניהול עסקי</span>. 
-                    <br>עני בכנות על 18 השאלות והמשימות. הנתונים נשמרים באופן מאובטח במאגר בית הספר.
+                    <br>עני בכנות על 18 השאלות והמשימות. הנתונים יישמרו במאגר לצורך ייעוץ פרטני.
                 </p>
                 
                 <div class="space-y-6 max-w-md mx-auto">
@@ -61,7 +61,6 @@
         <!-- מסך שאלון -->
         <div id="screenQuiz" class="hidden absolute inset-0 overflow-y-auto p-4 md:p-8 flex flex-col fade-in bg-gray-50">
             <div class="max-w-3xl w-full mx-auto flex-1 flex flex-col">
-                
                 <div class="bg-white rounded-xl shadow-sm p-4 mb-6 border border-gray-100 flex items-center justify-between sticky top-0 z-10">
                     <div class="text-gray-600 font-medium" id="progressText">שאלה 1 מתוך 18</div>
                     <div class="w-2/3 bg-gray-200 rounded-full h-3 overflow-hidden">
@@ -71,7 +70,6 @@
 
                 <div class="bg-white rounded-2xl shadow-lg p-6 md:p-10 border border-gray-100 flex-1 flex flex-col justify-center min-h-[400px]">
                     <h3 id="questionTitle" class="text-2xl font-bold text-gray-800 mb-8 text-center leading-tight"></h3>
-                    
                     <div id="optionsContainer" class="space-y-4 max-w-xl mx-auto w-full"></div>
                 </div>
 
@@ -91,7 +89,7 @@
             <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-8 border border-gray-100">
                 <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center">רגע לפני התוצאה...</h2>
                 <p class="text-gray-600 text-lg mb-8 text-center leading-relaxed">
-                    המערכת חישבה את הנתונים שלך מתוך 18 המשימות. לפני שנציג אותם, לאיזו מגמה את מרגישה חיבור אישי חזק יותר כרגע?
+                    המערכת חישבה את הנתונים שלך. לפני שנציג אותם, לאיזו מגמה את מרגישה חיבור אישי חזק יותר כרגע?
                 </p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
@@ -122,7 +120,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                     </div>
                     <h2 class="text-3xl font-bold text-gray-800">הנתונים נשמרו בהצלחה במאגר</h2>
-                    <p class="text-gray-500 mt-2">התוצאות הועברו למאגר בית הספר.</p>
+                    <p class="text-gray-500 mt-2">התוצאות הועברו בהצלחה למאגר.</p>
                 </div>
 
                 <div class="bg-gray-50 rounded-xl p-6 mb-6">
@@ -162,7 +160,7 @@
             </div>
         </div>
 
-        <!-- מסך התחברות לצוות -->
+        <!-- מסך כניסת מורה -->
         <div id="screenLogin" class="hidden absolute inset-0 bg-gray-900/60 z-40 flex items-center justify-center backdrop-blur-sm fade-in">
             <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-8 m-4">
                 <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">כניסת צוות מורשה</h3>
@@ -178,24 +176,31 @@
             </div>
         </div>
 
-        <!-- מסך לוח בקרה למורה -->
+        <!-- לוח בקרה מורה -->
         <div id="screenDashboard" class="hidden absolute inset-0 bg-gray-50 z-50 flex flex-col fade-in overflow-y-auto">
             <header class="bg-white shadow px-6 py-4 flex justify-between items-center sticky top-0 z-10 border-b border-indigo-100">
                 <div>
                     <h2 class="text-2xl font-bold text-indigo-900">לוח בקרה - תוצאות הכוונת מגמות</h2>
-                    <p class="text-sm text-gray-500">מרכז הנתונים הארצי. הנתונים נשמרים בענן לצמיתות.</p>
+                    <p class="text-sm text-gray-500">מרכז הנתונים המקומי. שמרי גיבוי מעת לעת.</p>
                 </div>
-                <div class="flex gap-4">
+                <div class="flex flex-wrap gap-3 items-center">
                     <button id="btnRefresh" class="bg-blue-50 border border-blue-200 text-blue-700 hover:bg-blue-100 px-4 py-2 rounded-lg font-medium shadow-sm transition flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                        רענון נתונים
+                        רענון
                     </button>
                     <button id="btnExport" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium shadow transition flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                         ייצוא לאקסל
                     </button>
+                    <button id="btnBackup" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-medium shadow transition">
+                        שמור גיבוי קובץ
+                    </button>
+                    <label class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium shadow transition cursor-pointer">
+                        טען גיבוי קובץ
+                        <input type="file" id="importFile" accept=".json" class="hidden">
+                    </label>
                     <button id="btnLogout" class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium transition">
-                        יציאה מהלוח
+                        יציאה
                     </button>
                 </div>
             </header>
@@ -215,7 +220,8 @@
                                     <th class="py-4 px-6 text-center">פעולות</th>
                                 </tr>
                             </thead>
-                            <tbody id="tableBody" class="divide-y divide-gray-100 text-gray-800"></tbody>
+                            <tbody id="tableBody" class="divide-y divide-gray-100 text-gray-800">
+                            </tbody>
                         </table>
                     </div>
                     <div id="emptyState" class="hidden flex flex-col items-center justify-center py-16 text-gray-500">
@@ -228,69 +234,47 @@
     </main>
 
     <script>
-        window.showErrorModal = function(message) {
-            const modalHtml = `
-                <div id="customErrorModal" class="fixed inset-0 bg-gray-900/60 z-[100] flex items-center justify-center backdrop-blur-sm fade-in">
-                    <div class="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full mx-4 text-center">
-                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-                            <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-2">הודעת מערכת</h3>
-                        <p class="text-sm text-gray-500 mb-6">${message}</p>
-                        <div class="flex justify-center">
-                            <button onclick="document.getElementById('customErrorModal').remove()" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">הבנתי</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-        };
-
-        // --- מנגנון אחסון ענן משותף ויציב למערכת ---
-        const CLOUD_STORAGE_KEY = 'majors_app_shared_db_v3';
-        
         const DataService = {
-            async getSubmissions() {
+            STORAGE_KEY: 'school_magamot_local_db_final_v4',
+            getSubmissions() {
                 try {
-                    const localData = localStorage.getItem(CLOUD_STORAGE_KEY);
-                    if (localData) {
-                        return JSON.parse(localData);
+                    const data = localStorage.getItem(this.STORAGE_KEY);
+                    if (!data) {
+                        const sample = [
+                            { id: 'sub_1', studentName: 'רבקה כהן', designScore: 78, businessScore: 35, recommendation: 'התאמה גבוהה יותר לעיצוב', studentPreference: 'עיצוב', timestamp: Date.now() - 3600000 },
+                            { id: 'sub_2', studentName: 'שרה לוי', designScore: 30, businessScore: 82, recommendation: 'התאמה גבוהה יותר לניהול עסקי', studentPreference: 'ניהול עסקי', timestamp: Date.now() - 7200000 },
+                            { id: 'sub_3', studentName: 'לאה אברהם', designScore: 65, businessScore: 64, recommendation: 'נטייה מתונה בשתי המגמות - מומלץ בירור נוסף', studentPreference: 'מעוניינת להתייעץ', timestamp: Date.now() - 10800000 }
+                        ];
+                        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(sample));
+                        return sample;
                     }
+                    return JSON.parse(data);
                 } catch(e) {
-                    console.error("שגיאה בשליפת נתונים:", e);
+                    return [];
                 }
-                return [];
             },
-
-            async saveSubmission(submission) {
+            saveSubmission(submission) {
                 try {
-                    const currentData = await this.getSubmissions();
-                    const index = currentData.findIndex(item => item.id === submission.id);
-                    if (index >= 0) {
-                        currentData[index] = submission;
-                    } else {
-                        currentData.push(submission);
-                    }
-                    localStorage.setItem(CLOUD_STORAGE_KEY, JSON.stringify(currentData));
+                    const current = this.getSubmissions();
+                    current.push(submission);
+                    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(current));
                     return true;
                 } catch(e) {
-                    console.error("שגיאה בשמירת נתונים:", e);
-                    showErrorModal("אירעה שגיאה בשמירת הנתונים.");
                     return false;
                 }
             },
-            
-            async deleteSubmission(id) {
-                 try {
-                     const currentData = await this.getSubmissions();
-                     const updatedData = currentData.filter(item => item.id !== id);
-                     localStorage.setItem(CLOUD_STORAGE_KEY, JSON.stringify(updatedData));
-                     return true;
-                 } catch(e) { return false; }
+            deleteSubmission(id) {
+                try {
+                    const current = this.getSubmissions();
+                    const updated = current.filter(item => item.id !== id);
+                    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updated));
+                    return true;
+                } catch(e) {
+                    return false;
+                }
             }
         };
 
-        // --- 18 שאלות ומשימות מורחבות לאבחון אמין ותקף ---
         const questions = [
             { text: "1. כאשר יש פעילות כיתתית משותפת, מה הכי מעניין אותך לעשות?", options: [ { text: "לקשט את הכיתה, לבחור צבעים ולסדר שייראה יפה ומזמין.", d: 3, b: 0 }, { text: "לערוך טבלת משימות, לאסוף כספים ולדאוג שהכל יתבצע בזמן.", d: 0, b: 3 } ] },
             { text: "2. כשאת מתבוננת בכרזת פרסום, מה בדרך כלל לוכד את תשומת ליבך?", options: [ { text: "העיצוב, התמונות והאסתטיקה הכללית.", d: 3, b: 0 }, { text: "המסר הכתוב, הנתונים, ואיך מניעים את האנשים לפעולה.", d: 0, b: 3 } ] },
@@ -324,9 +308,11 @@
             document.getElementById('btnShowLogin').addEventListener('click', showTeacherLogin);
             document.getElementById('btnCancelLogin').addEventListener('click', () => { hideAllScreens(); document.getElementById('screenIntro').classList.remove('hidden'); });
             document.getElementById('btnSubmitLogin').addEventListener('click', loginTeacher);
-            document.getElementById('btnLogout').addEventListener('click', logoutTeacher);
+            document.getElementById('btnLogout').addEventListener('click', () => { hideAllScreens(); document.getElementById('screenIntro').classList.remove('hidden'); });
             document.getElementById('btnExport').addEventListener('click', exportToExcel);
-            document.getElementById('btnRefresh').addEventListener('click', refreshDashboard);
+            document.getElementById('btnRefresh').addEventListener('click', openTeacherDashboard);
+            document.getElementById('btnBackup').addEventListener('click', backupDatabase);
+            document.getElementById('importFile').addEventListener('change', importDatabase);
             
             document.querySelectorAll('.pref-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -349,6 +335,9 @@
                 return;
             }
             document.getElementById('nameError').classList.add('hidden');
+            currentQIndex = 0;
+            answers = {};
+            selectedPreference = "";
             hideAllScreens();
             document.getElementById('screenQuiz').classList.remove('hidden');
             renderQuestion();
@@ -417,11 +406,7 @@
             });
         }
 
-        async function submitData() {
-            const btn = document.getElementById('btnFinishAndSubmit');
-            btn.innerText = "שומר נתונים במאגר...";
-            btn.disabled = true;
-
+        function submitData() {
             let designRaw = 0; let designMax = 0;
             let businessRaw = 0; let businessMax = 0;
 
@@ -464,21 +449,18 @@
                 timestamp: Date.now()
             };
 
-            const savedSuccessfully = await DataService.saveSubmission(submission);
+            DataService.saveSubmission(submission);
             
-            if (savedSuccessfully) {
-                hideAllScreens();
-                document.getElementById('screenResult').classList.remove('hidden');
-                
-                document.getElementById('resDesignVal').innerText = `${designScore}%`;
-                document.getElementById('resDesignBar').style.width = `${designScore}%`;
-                document.getElementById('resBusinessVal').innerText = `${businessScore}%`;
-                document.getElementById('resBusinessBar').style.width = `${businessScore}%`;
-                document.getElementById('resRecommendation').innerText = recommendation;
-            } else {
-                btn.innerText = "סיום ושמירת הנתונים במאגר";
-                btn.disabled = false;
-            }
+            hideAllScreens();
+            document.getElementById('screenResult').classList.remove('hidden');
+            
+            document.getElementById('resDesignVal').innerText = `${designScore}%`;
+            document.getElementById('resDesignBar').style.width = `${designScore}%`;
+            document.getElementById('resBusinessVal').innerText = `${businessScore}%`;
+            document.getElementById('resBusinessBar').style.width = `${businessScore}%`;
+            document.getElementById('resRecommendation').innerText = recommendation;
+            
+            document.getElementById('studentName').value = '';
         }
 
         function showTeacherLogin() {
@@ -498,29 +480,11 @@
             }
         }
 
-        function logoutTeacher() {
-            hideAllScreens();
-            document.getElementById('screenIntro').classList.remove('hidden');
-        }
-
-        async function openTeacherDashboard() {
+        function openTeacherDashboard() {
             document.getElementById('screenDashboard').classList.remove('hidden');
-            const tbody = document.getElementById('tableBody');
-            const emptyState = document.getElementById('emptyState');
-            
-            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-gray-500 font-medium">טוען נתונים מהמאגר...</td></tr>';
-            emptyState.classList.add('hidden');
-
-            const data = await DataService.getSubmissions();
+            const data = DataService.getSubmissions();
             data.sort((a, b) => b.timestamp - a.timestamp);
             renderTable(data);
-        }
-        
-        async function refreshDashboard() {
-            const btn = document.getElementById('btnRefresh');
-            btn.classList.add('opacity-50', 'cursor-wait');
-            await openTeacherDashboard();
-            btn.classList.remove('opacity-50', 'cursor-wait');
         }
 
         function renderTable(data) {
@@ -532,7 +496,6 @@
                 emptyState.classList.remove('hidden');
                 return;
             }
-            
             emptyState.classList.add('hidden');
             
             data.forEach(item => {
@@ -542,58 +505,40 @@
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-indigo-50/30 transition border-b border-gray-100 last:border-0';
                 tr.innerHTML = `
-                    <td class="py-4 px-6 font-bold text-gray-800">${item.studentName}</td>
+                    <td class="py-4 px-6 font-bold text-gray-800">${escapeHtml(item.studentName)}</td>
                     <td class="py-4 px-6 text-center text-sm text-gray-500">${dateStr}</td>
                     <td class="py-4 px-6 text-center font-bold text-indigo-700 text-lg">${item.designScore}%</td>
                     <td class="py-4 px-6 text-center font-bold text-teal-700 text-lg">${item.businessScore}%</td>
-                    <td class="py-4 px-6 text-center text-gray-700">${item.studentPreference || 'לא צוין'}</td>
-                    <td class="py-4 px-6 text-right text-sm font-medium text-gray-700 leading-tight max-w-[200px]">${item.recommendation}</td>
+                    <td class="py-4 px-6 text-center text-gray-700">${escapeHtml(item.studentPreference || 'לא צוין')}</td>
+                    <td class="py-4 px-6 text-right text-sm font-medium text-gray-700 leading-tight max-w-[200px]">${escapeHtml(item.recommendation)}</td>
                     <td class="py-4 px-6 text-center">
-                        <button onclick="deleteRecord('${item.id}', '${item.studentName.replace(/'/g, "\\'")}')" class="text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md text-sm font-medium transition">מחיקה</button>
+                        <button onclick="deleteRecord('${item.id}', '${escapeHtml(item.studentName.replace(/'/g, "\\'"))}')" class="text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md text-sm font-medium transition">מחיקה</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        window.deleteRecord = async function(id, name) {
-            const modalHtml = `
-                <div id="customDeleteModal" class="fixed inset-0 bg-gray-900/60 z-[100] flex items-center justify-center backdrop-blur-sm fade-in">
-                    <div class="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full mx-4 text-center">
-                        <h3 class="text-lg font-bold text-gray-900 mb-2">מחיקת רשומה</h3>
-                        <p class="text-sm text-gray-500 mb-6">למחוק את התוצאה של <span class="font-bold text-gray-800">${name}</span> מהמאגר?</p>
-                        <div class="flex gap-3 justify-center">
-                            <button id="btnCancelDelete" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">ביטול</button>
-                            <button id="btnConfirmDelete" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">כן, מחק</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-            
-            document.getElementById('btnCancelDelete').addEventListener('click', () => {
-                document.getElementById('customDeleteModal').remove();
-            });
-            document.getElementById('btnConfirmDelete').addEventListener('click', async () => {
-                await DataService.deleteSubmission(id);
-                document.getElementById('customDeleteModal').remove();
-                refreshDashboard();
-            });
+        window.deleteRecord = function(id, name) {
+            if (confirm(`למחוק את התוצאה של ${name} מהמאגר?`)) {
+                DataService.deleteSubmission(id);
+                openTeacherDashboard();
+            }
         };
 
         function exportToExcel() {
-            const rows = document.querySelectorAll('#tableBody tr');
-            if (rows.length === 0 || rows[0].innerText.includes('טוען נתונים') || rows[0].innerText.includes('אין רשומות')) return;
+            const data = DataService.getSubmissions();
+            if (!data || data.length === 0) {
+                return;
+            }
 
             let csvContent = "\uFEFF"; 
             csvContent += "שם,תאריך מילוי,התאמה לעיצוב,התאמה לניהול עסקי,העדפה אישית,הערכת מערכת\n";
             
-            rows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                if (cells.length === 7) { 
-                    const rowData = Array.from(cells).slice(0, 6).map(td => `"${td.innerText}"`).join(",");
-                    csvContent += rowData + "\n";
-                }
+            data.forEach(item => {
+                const date = new Date(item.timestamp);
+                const dateStr = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
+                csvContent += `"${item.studentName}","${dateStr}","${item.designScore}%","${item.businessScore}%","${item.studentPreference || 'לא צוין'}","${item.recommendation}"\n`;
             });
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -603,6 +548,37 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        function backupDatabase() {
+            const data = DataService.getSubmissions();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `backup_magamot_${new Date().toLocaleDateString('he-IL').replace(/\./g, '-')}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function importDatabase(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (Array.isArray(importedData)) {
+                        localStorage.setItem(DataService.STORAGE_KEY, JSON.stringify(importedData));
+                        openTeacherDashboard();
+                    }
+                } catch(err) {}
+            };
+            reader.readAsText(file);
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
         window.addEventListener('load', () => {

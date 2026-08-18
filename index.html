@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הכוונת מגמות - עיצוב וניהול עסקי</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .option-btn { transition: all 0.2s; }
+        .option-btn.selected { background-color: #e0e7ff; border-color: #6366f1; box-shadow: 0 0 0 2px #6366f1; }
+    </style>
+</head>
+<body class="text-gray-800 h-screen flex flex-col overflow-hidden">
+    <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center shrink-0 z-20 relative">
+        <div class="flex items-center gap-3">
+            <div class="bg-indigo-600 text-white p-2 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+            </div>
+            <h1 class="text-2xl font-bold text-indigo-900">הכוונת מגמות</h1>
+            
+            <div id="cloudStatus" class="hidden items-center gap-2 mr-4 px-3 py-1 bg-green-50 border border-green-200 rounded-full text-green-700 text-sm font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                מחובר למאגר הארצי
+            </div>
+        </div>
+        <button id="btnShowLogin" class="text-sm font-medium text-gray-500 hover:text-indigo-600 px-4 py-2 border border-gray-300 rounded-lg bg-white hover:bg-gray-50 transition">
+            כניסת צוות
+        </button>
+    </header>
+
+    <main class="flex-1 relative overflow-hidden">
+        <!-- מסך 1: פתיחה והזנת פרטים -->
+        <div id="screenIntro" class="absolute inset-0 overflow-y-auto p-6 flex flex-col items-center justify-center fade-in bg-gray-50">
+            <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-8 border border-gray-100">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center">ברוכה הבאה לשאלון ההכוונה</h2>
+                <p class="text-gray-600 text-lg mb-8 text-center leading-relaxed">
+                    שאלון זה נועד לעזור לך לבחון איזו מגמה עשויה להתאים יותר לכישורייך ולנטיותייך: <span class="font-semibold text-indigo-600">עיצוב</span> או <span class="font-semibold text-teal-600">ניהול עסקי</span>. 
+                    <br>אין כאן תשובות נכונות או שגויות. עני בכנות. הנתונים יישמרו במאגר בית הספר לשם ייעוץ.
+                </p>
+                
+                <div class="space-y-6 max-w-md mx-auto">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">שם פרטי ומשפחה:</label>
+                        <input type="text" id="studentName" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border" placeholder="הקלידי את שמך המלא">
+                        <p id="nameError" class="text-red-500 text-sm mt-2 hidden">אנא הזיני שם מלא (לפחות 2 אותיות).</p>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button id="btnStart" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg transition transform hover:-translate-y-1 text-lg">
+                            התחילי בשאלון
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- מסך 2: השאלון עצמו -->
+        <div id="screenQuiz" class="hidden absolute inset-0 overflow-y-auto p-4 md:p-8 flex flex-col fade-in bg-gray-50">
+            <div class="max-w-3xl w-full mx-auto flex-1 flex flex-col">
+                
+                <div class="bg-white rounded-xl shadow-sm p-4 mb-6 border border-gray-100 flex items-center justify-between sticky top-0 z-10">
+                    <div class="text-gray-600 font-medium" id="progressText">שאלה 1 מתוך 14</div>
+                    <div class="w-2/3 bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div id="progressBar" class="bg-indigo-600 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-10 border border-gray-100 flex-1 flex flex-col justify-center min-h-[400px]">
+                    <h3 id="questionTitle" class="text-2xl font-bold text-gray-800 mb-8 text-center leading-tight"></h3>
+                    
+                    <div id="optionsContainer" class="space-y-4 max-w-xl mx-auto w-full">
+                        <!-- האפשרויות ירונדרו כאן -->
+                    </div>
+                </div>
+
+                <div class="flex justify-between mt-6">
+                    <button id="btnPrevQ" class="hidden bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-3 px-6 rounded-xl shadow-sm transition">
+                        חזרה
+                    </button>
+                    <button id="btnNextQ" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed mr-auto">
+                        המשך לשאלה הבאה
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- מסך 3: העדפה אישית -->
+        <div id="screenPreference" class="hidden absolute inset-0 overflow-y-auto p-6 flex flex-col items-center justify-center fade-in bg-gray-50">
+            <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-8 border border-gray-100">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center">רגע לפני התוצאה...</h2>
+                <p class="text-gray-600 text-lg mb-8 text-center leading-relaxed">
+                    המערכת חישבה את הנתונים. לפני שנציג אותם, לאיזו מגמה את מרגישה חיבור אישי חזק יותר כרגע?
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <button class="pref-btn border-2 border-gray-200 rounded-xl p-4 text-center hover:border-indigo-500 hover:bg-indigo-50 transition focus:outline-none" data-pref="עיצוב">
+                        <span class="block text-xl font-bold text-indigo-700 mb-1">עיצוב</span>
+                    </button>
+                    <button class="pref-btn border-2 border-gray-200 rounded-xl p-4 text-center hover:border-teal-500 hover:bg-teal-50 transition focus:outline-none" data-pref="ניהול עסקי">
+                        <span class="block text-xl font-bold text-teal-700 mb-1">ניהול עסקי</span>
+                    </button>
+                    <button class="pref-btn md:col-span-2 border-2 border-gray-200 rounded-xl p-4 text-center hover:border-blue-500 hover:bg-blue-50 transition focus:outline-none" data-pref="מעוניינת להתייעץ">
+                        <span class="block text-lg font-bold text-gray-700">עדיין מתלבטת / אשמח להתייעץ</span>
+                    </button>
+                </div>
+
+                <div class="text-center pt-4 border-t border-gray-100">
+                    <button id="btnFinishAndSubmit" disabled class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-10 rounded-xl shadow-lg transition text-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                        סיום ושמירת הנתונים במאגר הארצי
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- מסך 4: הצגת התוצאות -->
+        <div id="screenResult" class="hidden absolute inset-0 overflow-y-auto p-4 md:p-8 flex flex-col items-center justify-center fade-in bg-gray-50">
+            <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-8 border border-gray-100">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-800">הנתונים נשמרו בהצלחה</h2>
+                    <p class="text-gray-500 mt-2">הנתונים הועברו למאגר הצוות להמשך ייעוץ והכוונה.</p>
+                </div>
+
+                <div class="bg-gray-50 rounded-xl p-6 mb-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">מדד התאמה משוער:</h3>
+                    
+                    <div class="mb-5">
+                        <div class="flex justify-between items-end mb-1">
+                            <span class="font-bold text-indigo-700">מגמת עיצוב</span>
+                            <span class="font-bold text-xl" id="resDesignVal">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div id="resDesignBar" class="bg-indigo-500 h-3 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-end mb-1">
+                            <span class="font-bold text-teal-700">מגמת ניהול עסקי</span>
+                            <span class="font-bold text-xl" id="resBusinessVal">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div id="resBusinessBar" class="bg-teal-500 h-3 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-100 rounded-xl p-5 mb-8">
+                    <h4 class="font-bold text-blue-900 mb-2">סיכום המערכת:</h4>
+                    <p id="resRecommendation" class="text-blue-800 font-medium text-lg"></p>
+                </div>
+
+                <div class="text-center">
+                    <button onclick="window.location.reload()" class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-3 px-8 rounded-xl shadow-sm transition">
+                        חזרה למסך הראשי (לתלמידה הבאה)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- מסך 5: התחברות למורה -->
+        <div id="screenLogin" class="hidden absolute inset-0 bg-gray-900/60 z-40 flex items-center justify-center backdrop-blur-sm fade-in">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-8 m-4 transform transition-all">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">כניסת צוות מורשה</h3>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">קוד גישה למאגר:</label>
+                    <input type="password" id="teacherCode" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 border text-center text-xl tracking-widest" placeholder="">
+                    <p id="teacherError" class="text-red-500 text-sm mt-2 hidden">קוד שגוי, אנא נסי שוב.</p>
+                </div>
+                <div class="flex gap-3">
+                    <button id="btnCancelLogin" class="flex-1 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-3 rounded-lg transition">ביטול</button>
+                    <button id="btnSubmitLogin" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow transition">כניסה</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- מסך 6: לוח בקרה למורה -->
+        <div id="screenDashboard" class="hidden absolute inset-0 bg-gray-50 z-50 flex flex-col fade-in overflow-y-auto">
+            <header class="bg-white shadow px-6 py-4 flex justify-between items-center sticky top-0 z-10 border-b border-indigo-100">
+                <div>
+                    <h2 class="text-2xl font-bold text-indigo-900">לוח בקרה - תוצאות הכוונת מגמות</h2>
+                    <p class="text-sm text-gray-500">מרכז הנתונים הארצי. הנתונים מגובים באופן שוטף בענן.</p>
+                </div>
+                <div class="flex gap-4">
+                    <button id="btnRefresh" class="bg-blue-50 border border-blue-200 text-blue-700 hover:bg-blue-100 px-4 py-2 rounded-lg font-medium shadow-sm transition flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                        רענון נתונים
+                    </button>
+                    <button id="btnExport" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium shadow transition flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                        ייצוא לאקסל
+                    </button>
+                    <button id="btnLogout" class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium transition">
+                        יציאה מהלוח
+                    </button>
+                </div>
+            </header>
+
+            <div class="flex-1 p-6">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 border-b border-gray-200 text-gray-700 font-semibold text-sm">
+                                    <th class="py-4 px-6 text-right">שם התלמידה</th>
+                                    <th class="py-4 px-6 text-center">תאריך מילוי</th>
+                                    <th class="py-4 px-6 text-center text-indigo-700">אחוז עיצוב</th>
+                                    <th class="py-4 px-6 text-center text-teal-700">אחוז ניהול עסקי</th>
+                                    <th class="py-4 px-6 text-center">העדפת התלמידה</th>
+                                    <th class="py-4 px-6 text-right">הערכת מערכת</th>
+                                    <th class="py-4 px-6 text-center">פעולות</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody" class="divide-y divide-gray-100 text-gray-800">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="emptyState" class="hidden flex flex-col items-center justify-center py-16 text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
+                        <p class="text-lg">אין רשומות במאגר הארצי כרגע.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        let app = null;
+        let db = null;
+        let auth = null;
+        let isFirebaseReady = false;
+        
+        const currentAppId = typeof __app_id !== 'undefined' ? __app_id : 'majors-app-default';
+        const collectionPath = `artifacts/${currentAppId}/public/data/submissions`;
+        let unsubscribeSnapshot = null;
+
+        window.showErrorModal = function(message) {
+            const modalHtml = `
+                <div id="customErrorModal" class="fixed inset-0 bg-gray-900/60 z-[100] flex items-center justify-center backdrop-blur-sm fade-in">
+                    <div class="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full mx-4 text-center">
+                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                            <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">שגיאה במערכת</h3>
+                        <p class="text-sm text-gray-500 mb-6">${escapeHtml(message)}</p>
+                        <div class="flex justify-center">
+                            <button onclick="document.getElementById('customErrorModal').remove()" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">הבנתי</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        };
+
+        async function initApp() {
+            try {
+                if (typeof __firebase_config !== 'undefined') {
+                    app = initializeApp(JSON.parse(__firebase_config));
+                    db = getFirestore(app);
+                    auth = getAuth(app);
+                    
+                    if (typeof __initial_auth_token !== 'undefined') {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                        isFirebaseReady = true;
+                    } else {
+                        await signInAnonymously(auth);
+                        isFirebaseReady = true;
+                    }
+                    
+                    if (auth.currentUser) {
+                        document.getElementById('cloudStatus').classList.remove('hidden');
+                        document.getElementById('cloudStatus').classList.add('flex');
+                    }
+                } else {
+                    console.warn("No Firebase config found. Running without cloud connection.");
+                }
+            } catch (error) {
+                console.error("Firebase init failed:", error);
+                showErrorModal("שגיאה בחיבור לענן. ודאי שיש חיבור אינטרנט תקין.");
+            }
+            setupEventListeners();
+        }
+
+        const DataService = {
+            async saveSubmission(submission) {
+                if (!isFirebaseReady || !auth?.currentUser) {
+                    showErrorModal("לא ניתן לשמור נתונים: המערכת אינה מחוברת לענן (בדקי חיבור רשת).");
+                    return false;
+                }
+                try {
+                    await setDoc(doc(db, collectionPath, submission.id), submission);
+                    return true;
+                } catch(e) {
+                    console.error("Save error:", e);
+                    showErrorModal("שגיאה בשמירת הנתונים לענן. פני לתמיכה טכנית.");
+                    return false;
+                }
+            },
+
+            subscribeToSubmissions(callback, errorCallback) {
+                if (!isFirebaseReady || !auth?.currentUser) {
+                    showErrorModal("המערכת מנותקת. לא ניתן למשוך נתונים.");
+                    if (errorCallback) errorCallback();
+                    return () => {};
+                }
+                
+                const q = collection(db, collectionPath);
+                return onSnapshot(q, (snapshot) => {
+                    const cloudData = [];
+                    snapshot.forEach(doc => cloudData.push(doc.data()));
+                    cloudData.sort((a, b) => b.timestamp - a.timestamp);
+                    callback(cloudData);
+                }, (error) => {
+                    console.error("Fetch error:", error);
+                    showErrorModal("שגיאה במשיכת נתונים מהמאגר הארצי.");
+                    if(errorCallback) errorCallback(error);
+                });
+            },
+
+            async deleteSubmission(id) {
+                if (!isFirebaseReady || !auth?.currentUser) return;
+                try { await deleteDoc(doc(db, collectionPath, id)); } catch(e) {}
+            }
+        };
+
+        const questions = [
+            { text: "כאשר יש פעילות כיתתית משותפת, מה הכי מעניין אותך לעשות?", options: [ { text: "לקשט את הכיתה, לבחור צבעים ולסדר שייראה יפה ומזמין.", d: 3, b: 0 }, { text: "לערוך טבלת משימות, לאסוף כספים ולדאוג שהכל יתבצע בזמן.", d: 0, b: 3 } ] },
+            { text: "כשאת מתבוננת בכרזת פרסום, מה בדרך כלל לוכד את תשומת ליבך?", options: [ { text: "העיצוב, התמונות והאסתטיקה הכללית.", d: 3, b: 0 }, { text: "המסר הכתוב, הנתונים, ואיך מניעים את האנשים לפעולה.", d: 0, b: 3 } ] },
+            { text: "איזה סוג חוגים או סדנאות העשרה קורצים לך יותר?", options: [ { text: "אמנות, ציור, צילום או עריכה חזותית.", d: 3, b: 0 }, { text: "יזמות, כלכלה, מחשבים וניהול.", d: 0, b: 3 } ] },
+            { text: "כשאת לומדת למבחן, איך קל לך יותר לזכור את החומר?", options: [ { text: "בעזרת צבעים שונים, תרשימי זרימה או ציורים.", d: 3, b: 0 }, { text: "כשהחומר מסודר בסעיפים ממוספרים, כותרות וטבלאות.", d: 0, b: 3 } ] },
+            { text: "איך את ניגשת להכנת עבודה מסכמת ארוכה?", options: [ { text: "אוספת רעיונות והשראות, ולפעמים משנה את הכיוון תוך כדי.", d: 3, b: 0 }, { text: "מכינה ראשי פרקים מראש ועובדת בדיוק לפי התכנון.", d: 0, b: 3 } ] },
+            { text: "מתי תרגישי שתוצר שהכנת הוא באמת מוכן להגשה?", options: [ { text: "כשזה נראה יפה, ייחודי, ואסתטי עד לפרט האחרון.", d: 3, b: 0 }, { text: "כשבדקתי שזה עומד בכל הדרישות ושהנתונים מדויקים.", d: 0, b: 3 } ] },
+            { text: "בעבודה בצוות, איזה תפקיד בדרך כלל תיקחי?", options: [ { text: "זו שמביאה את הרעיונות המקוריים ואחראית על הנראות הסופית.", d: 3, b: 0 }, { text: "זו שמחלקת משימות, מארגנת ודואגת שכולן יעבדו.", d: 0, b: 3 } ] },
+            { text: "האם מפריע לך כשכללים מגבילים את דרך הפעולה שלך?", options: [ { text: "כן, אני אוהבת חופש ליצור דברים בדרך משלי.", d: 3, b: 0 }, { text: "לא, אני מעדיפה כללים ברורים שמסבירים מה מצופה ממני.", d: 0, b: 3 } ] },
+            { text: "🎯 משימת התנסות: בית הספר מפיק עיתון. מה יתאים לך יותר?", options: [ { text: "עיצוב העמודים, בחירת הפונטים ושילוב התמונות.", d: 4, b: 0 }, { text: "תכנון לוח הזמנים להדפסה, חלוקת תקציב וניהול הכותבות.", d: 0, b: 4 } ] },
+            { text: "כיצד תעדיפי להציג נתונים על שעות התנדבות?", options: [ { text: "לצייר כרזה עם איור שממחיש את העשייה.", d: 3, b: 0 }, { text: "להכין טבלה ברורה ואולי גרף שמסכם את המספרים.", d: 0, b: 3 } ] },
+            { text: "קיבלת תקציב לערב גיבוש. מה הצעד הראשון שלך?", options: [ { text: "לחשוב על נושא (קונספט) לערב ולדמיין איך החדר ייראה.", d: 3, b: 0 }, { text: "לחשב כמה כסף יש ולחלק אותו סעיף-סעיף לפי הצרכים.", d: 0, b: 3 } ] },
+            { text: "🎯 משימת התנסות: איזה אתגר תעדיפי לפתור?", options: [ { text: "לעצב לוגו חדש וחגיגי לבית הספר.", d: 4, b: 0 }, { text: "לתכנן מערכת יעילה יותר לרישום נוכחות בבוקר.", d: 0, b: 4 } ] },
+            { text: "כשאת פותרת בעיה מסובכת, מה עוזר לך?", options: [ { text: "לצייר שרבוטים, לדמיין או לחפש השראה ויזואלית.", d: 3, b: 0 }, { text: "לכתוב את הנתונים על דף ולנתח אותם שלב אחר שלב.", d: 0, b: 3 } ] },
+            { text: "איזה משפט מתאר אותך בצורה טובה יותר?", options: [ { text: "'אני רואה דברים שונים מאחרים ויש לי רעיונות יצירתיים.'", d: 3, b: 0 }, { text: "'אני מאורגנת, חושבת קדימה ויודעת איך להוציא תוכניות לפועל.'", d: 0, b: 3 } ] }
+        ];
+
+        let currentQIndex = 0;
+        let answers = {};
+        let selectedPreference = "";
+
+        function setupEventListeners() {
+            document.getElementById('btnStart').addEventListener('click', () => {
+                const name = document.getElementById('studentName').value.trim();
+                if (name.length < 2) {
+                    document.getElementById('nameError').classList.remove('hidden');
+                    return;
+                }
+                document.getElementById('nameError').classList.add('hidden');
+                document.getElementById('screenIntro').classList.add('hidden');
+                document.getElementById('screenQuiz').classList.remove('hidden');
+                renderQuestion();
+            });
+
+            document.getElementById('btnNextQ').addEventListener('click', () => {
+                if (currentQIndex < questions.length - 1) {
+                    currentQIndex++;
+                    renderQuestion();
+                } else {
+                    document.getElementById('screenQuiz').classList.add('hidden');
+                    document.getElementById('screenPreference').classList.remove('hidden');
+                }
+            });
+
+            document.getElementById('btnPrevQ').addEventListener('click', () => {
+                if (currentQIndex > 0) {
+                    currentQIndex--;
+                    renderQuestion();
+                }
+            });
+
+            document.querySelectorAll('.pref-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.pref-btn').forEach(b => b.classList.remove('ring-4', 'ring-indigo-300', 'bg-indigo-50'));
+                    e.currentTarget.classList.add('ring-4', 'ring-indigo-300', 'bg-indigo-50');
+                    selectedPreference = e.currentTarget.dataset.pref;
+                    document.getElementById('btnFinishAndSubmit').disabled = false;
+                });
+            });
+
+            document.getElementById('btnFinishAndSubmit').addEventListener('click', submitData);
+
+            document.getElementById('btnShowLogin').addEventListener('click', () => {
+                document.getElementById('teacherCode').value = '';
+                document.getElementById('teacherError').classList.add('hidden');
+                document.getElementById('screenLogin').classList.remove('hidden');
+            });
+            document.getElementById('btnCancelLogin').addEventListener('click', () => {
+                document.getElementById('screenLogin').classList.add('hidden');
+            });
+            document.getElementById('btnSubmitLogin').addEventListener('click', loginTeacher);
+            document.getElementById('btnLogout').addEventListener('click', () => {
+                if (unsubscribeSnapshot) {
+                    unsubscribeSnapshot();
+                    unsubscribeSnapshot = null;
+                }
+                hideAllScreens();
+                document.getElementById('screenIntro').classList.remove('hidden');
+            });
+            
+            document.getElementById('btnExport').addEventListener('click', exportToExcel);
+            document.getElementById('btnRefresh').addEventListener('click', refreshDashboard);
+            
+            document.getElementById('studentName').addEventListener('input', (e) => {
+                if(e.target.value.trim().length >= 2) {
+                    document.getElementById('nameError').classList.add('hidden');
+                }
+            });
+        }
+
+        function hideAllScreens() {
+            ['screenIntro', 'screenQuiz', 'screenPreference', 'screenResult', 'screenLogin', 'screenDashboard'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQIndex];
+            document.getElementById('questionTitle').innerText = q.text;
+            document.getElementById('progressText').innerText = `שאלה ${currentQIndex + 1} מתוך ${questions.length}`;
+            document.getElementById('progressBar').style.width = `${((currentQIndex + 1) / questions.length) * 100}%`;
+            
+            const prevBtn = document.getElementById('btnPrevQ');
+            const nextBtn = document.getElementById('btnNextQ');
+            
+            if (currentQIndex === 0) prevBtn.classList.add('hidden');
+            else prevBtn.classList.remove('hidden');
+
+            nextBtn.innerText = (currentQIndex === questions.length - 1) ? "המשך לשלב האחרון" : "המשך לשאלה הבאה";
+
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+            nextBtn.disabled = !(currentQIndex in answers);
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `option-btn w-full text-right p-4 rounded-xl border border-gray-200 hover:bg-gray-50 focus:outline-none flex items-center gap-3 ${answers[currentQIndex] === idx ? 'selected' : ''}`;
+                btn.innerHTML = `
+                    <div class="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center shrink-0">
+                        ${answers[currentQIndex] === idx ? '<div class="w-3 h-3 bg-indigo-600 rounded-full"></div>' : ''}
+                    </div>
+                    <span class="text-lg text-gray-700 font-medium">${opt.text}</span>
+                `;
+                btn.onclick = () => {
+                    answers[currentQIndex] = idx;
+                    renderQuestion();
+                    setTimeout(() => {
+                        if (currentQIndex < questions.length - 1 && answers[currentQIndex] === idx) {
+                             document.getElementById('btnNextQ').click();
+                        }
+                    }, 400);
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        async function submitData() {
+            const btn = document.getElementById('btnFinishAndSubmit');
+            btn.innerText = "שומר נתונים במאגר המרכזי...";
+            btn.disabled = true;
+
+            let designRaw = 0, designMax = 0;
+            let businessRaw = 0, businessMax = 0;
+
+            questions.forEach((q, id) => {
+                const selectedOpt = q.options[answers[id]];
+                designRaw += selectedOpt.d;
+                businessRaw += selectedOpt.b;
+                designMax += Math.max(...q.options.map(o => o.d));
+                businessMax += Math.max(...q.options.map(o => o.b));
+            });
+
+            const designScore = Math.round((designRaw / designMax) * 100) || 0;
+            const businessScore = Math.round((businessRaw / businessMax) * 100) || 0;
+
+            // לוגיקה מעודכנת בדיוק לפי ההנחיות החדשות:
+            let recommendation = "";
+            const diff = Math.abs(designScore - businessScore);
+            
+            if (diff > 5) {
+                // פער גדול מ-5%: יש מנצח מובהק
+                if (designScore > businessScore) {
+                    recommendation = "התאמה גבוהה יותר למגמת עיצוב";
+                } else {
+                    recommendation = "התאמה גבוהה יותר למגמת ניהול עסקי";
+                }
+            } else {
+                // הפער קטן או שווה ל-5%
+                if (designScore >= 70 && businessScore >= 70) {
+                    recommendation = "התאמה גבוהה לשתי המגמות - מומלצת שיחת ייעוץ";
+                } else if (designScore < 55 && businessScore < 55) {
+                    recommendation = "אין הכרעה מובהקת - נדרשת שיחת בירור מעמיקה";
+                } else {
+                    recommendation = "נטייה מתונה בשתי המגמות - מומלץ בירור נוסף";
+                }
+            }
+
+            const submission = {
+                id: crypto.randomUUID(),
+                studentName: document.getElementById('studentName').value.trim(),
+                designScore,
+                businessScore,
+                recommendation,
+                studentPreference: selectedPreference,
+                timestamp: Date.now()
+            };
+
+            const savedSuccessfully = await DataService.saveSubmission(submission);
+            
+            if (savedSuccessfully) {
+                document.getElementById('screenPreference').classList.add('hidden');
+                document.getElementById('screenResult').classList.remove('hidden');
+                
+                document.getElementById('resDesignVal').innerText = `${designScore}%`;
+                document.getElementById('resDesignBar').style.width = `${designScore}%`;
+                document.getElementById('resBusinessVal').innerText = `${businessScore}%`;
+                document.getElementById('resBusinessBar').style.width = `${businessScore}%`;
+                document.getElementById('resRecommendation').innerText = recommendation;
+            } else {
+                btn.innerText = "סיום ושמירת הנתונים במאגר הארצי";
+                btn.disabled = false;
+            }
+        }
+
+        function loginTeacher() {
+            const code = document.getElementById('teacherCode').value;
+            if (code === '0000') {
+                hideAllScreens();
+                openTeacherDashboard();
+            } else {
+                document.getElementById('teacherError').classList.remove('hidden');
+            }
+        }
+
+        function openTeacherDashboard() {
+            document.getElementById('screenDashboard').classList.remove('hidden');
+            const tbody = document.getElementById('tableBody');
+            const emptyState = document.getElementById('emptyState');
+            
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-gray-500 font-medium">מושך נתונים מהמאגר הארצי...</td></tr>';
+            emptyState.classList.add('hidden');
+
+            if (unsubscribeSnapshot) {
+                unsubscribeSnapshot();
+            }
+            
+            unsubscribeSnapshot = DataService.subscribeToSubmissions((data) => {
+                renderTable(data);
+            }, () => {
+                tbody.innerHTML = '';
+            });
+        }
+        
+        function refreshDashboard() {
+            const btn = document.getElementById('btnRefresh');
+            btn.classList.add('opacity-50', 'cursor-wait');
+            openTeacherDashboard();
+            setTimeout(() => {
+                btn.classList.remove('opacity-50', 'cursor-wait');
+            }, 1000);
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            const emptyState = document.getElementById('emptyState');
+            tbody.innerHTML = '';
+            
+            if (!data || data.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            data.forEach(item => {
+                const date = new Date(item.timestamp);
+                const dateStr = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}, ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
+                
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-indigo-50/30 transition border-b border-gray-100 last:border-0';
+                tr.innerHTML = `
+                    <td class="py-4 px-6 font-bold text-gray-800">${escapeHtml(item.studentName)}</td>
+                    <td class="py-4 px-6 text-center text-sm text-gray-500">${dateStr}</td>
+                    <td class="py-4 px-6 text-center font-bold text-indigo-700 text-lg">${item.designScore}%</td>
+                    <td class="py-4 px-6 text-center font-bold text-teal-700 text-lg">${item.businessScore}%</td>
+                    <td class="py-4 px-6 text-center text-gray-700">${escapeHtml(item.studentPreference || 'לא צוין')}</td>
+                    <td class="py-4 px-6 text-right text-sm font-medium text-gray-700 leading-tight max-w-[200px]">${item.recommendation}</td>
+                    <td class="py-4 px-6 text-center">
+                        <button onclick="deleteRecord('${item.id}', '${escapeHtml(item.studentName.replace(/'/g, "\\'"))}')" class="text-red-500 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md text-sm font-medium transition">מחיקה</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.deleteRecord = async function(id, name) {
+            const modalHtml = `
+                <div id="customDeleteModal" class="fixed inset-0 bg-gray-900/60 z-[100] flex items-center justify-center backdrop-blur-sm fade-in">
+                    <div class="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full mx-4 text-center">
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">מחיקת רשומה</h3>
+                        <p class="text-sm text-gray-500 mb-6">למחוק את התוצאה של <span class="font-bold text-gray-800">${name}</span> ממאגר הענן?</p>
+                        <div class="flex gap-3 justify-center">
+                            <button id="btnCancelDelete" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">ביטול</button>
+                            <button id="btnConfirmDelete" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">כן, מחק</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            document.getElementById('btnCancelDelete').addEventListener('click', () => {
+                document.getElementById('customDeleteModal').remove();
+            });
+            document.getElementById('btnConfirmDelete').addEventListener('click', async () => {
+                const btn = document.getElementById('btnConfirmDelete');
+                btn.innerText = 'מוחק...';
+                btn.disabled = true;
+                await DataService.deleteSubmission(id);
+                document.getElementById('customDeleteModal').remove();
+            });
+        };
+
+        function exportToExcel() {
+            if (!unsubscribeSnapshot) return; 
+            const rows = document.querySelectorAll('#tableBody tr');
+            if (rows.length === 0 || rows[0].innerText.includes('אין רשומות')) return;
+
+            let csvContent = "\uFEFF"; 
+            csvContent += "שם התלמידה,תאריך מילוי,התאמה לעיצוב,התאמה לניהול עסקי,העדפת התלמידה,הערכת מערכת\n";
+            
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length === 7) { 
+                    const rowData = Array.from(cells).slice(0, 6).map(td => `"${td.innerText}"`).join(",");
+                    csvContent += rowData + "\n";
+                }
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `תוצאות_הכוונה_${new Date().toLocaleDateString('he-IL').replace(/\./g, '-')}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        window.addEventListener('load', () => {
+            initApp();
+        });
+    </script>
+</body>
+</html>
